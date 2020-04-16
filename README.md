@@ -8,4 +8,5 @@ Automated Essay Scoring using BERT
 * Add architectural changes to the model.
 * Topic modelling using LDA.
 * Add instructions to the readme.
-* Visualization for topic modelling
+* Visualization for topic modelling.
+* Run for each individual sets in the essay.
