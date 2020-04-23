@@ -1,7 +1,6 @@
 # AES_DL
 The code in this section is exploration of different deep learning techniques on individual sets and on whole dataset.
 
-<<<<<<< HEAD
 ### Little bit about Data:
 
 we used the Auto-mated Student Assessment Prize (ASAP) datasetby The Hewlett Foundation.  (Hewlett, 2012:  ac-cessed March 12, 2020) 
@@ -102,14 +101,9 @@ but the results there may vary.
 * add GPU support for models.
 * add more extensive hyperparameters.
 * add sigmoid activation.
-=======
-[Under Developement]
-
-[TODO]:
-* Sanity check for the code.
-* Add architectural changes to the model.
 * Topic modelling using LDA.
-* Add instructions to the readme.
 * Visualization for topic modelling.
-* Run for each individual sets in the essay.
->>>>>>> 418c9450d3e5ee6b78a7c227e9739c17955deae6
+
+
+
+
