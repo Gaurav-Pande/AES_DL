@@ -1,3 +1,5 @@
+# [TODO]: This is under developement
+
 import torch
 def train(epoch, model, loss_function, optimizer, training_data, y):
 	train_loss = 0

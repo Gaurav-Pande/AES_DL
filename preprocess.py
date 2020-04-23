@@ -15,6 +15,16 @@ def split_in_sets(data):
         essay_sets.append(essay_set)
     return (essay_sets, min_scores, max_scores)
 
+def stop_words():
+    cap = ['@CAPS' + str(i) for i in range(100)]
+    loc = ['@LOCATION' + str(i) for i in range(100)]
+    org = ['@ORGANIZATION' + str(i) for i in range(100)]
+    per = ['@PERSON' + str(i) for i in range(100)]
+    date = ['@DATE' + str(i) for i in range(100)]
+    time = ['@TIME' + str(i) for i in range(100)]
+    money = ['@MONEY' + str(i) for i in range(100)]
+    ner = cap + loc + org + per + date + time + money
+    return ner
 
 
 def prepare_data(dataset_path):
@@ -26,11 +36,21 @@ def prepare_data(dataset_path):
     data.dropna(axis=1, inplace=True)
     X = data
     y = data['domain1_score']
-    return X,y
+    set1.drop(columns=["rater1_domain1", "rater2_domain1"], inplace=True)
+    set2.drop(columns=["rater1_domain1", "rater2_domain1"], inplace=True)
+    set3.drop(columns=["rater1_domain1", "rater2_domain1"], inplace=True)
+    set4.drop(columns=["rater1_domain1", "rater2_domain1"], inplace=True)
+    set5.drop(columns=["rater1_domain1", "rater2_domain1"], inplace=True)
+    set6.drop(columns=["rater1_domain1", "rater2_domain1"], inplace=True)
+    set7.drop(columns=["rater1_domain1", "rater2_domain1"], inplace=True)
+    set8.drop(columns=["rater1_domain1", "rater2_domain1"], inplace=True)
+    sets = [set1, set2, set3, set4, set5, set6, set7, set8]
+    return X,y,sets
 
 
 if __name__ == '__main__':
-    X,y = prepare_data(dataset_path='./data/training_set_rel3.tsv')
+    X,y,sets = prepare_data(dataset_path='./data/training_set_rel3.tsv')
     print(X.head())
+
 
 

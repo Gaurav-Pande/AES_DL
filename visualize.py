@@ -1,7 +1,7 @@
 from sklearn.model_selection import KFold
 from preprocess import prepare_data
 from utils import *
-from word2vec import build_word2vec
+from utils import build_word2vec
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
 
@@ -17,7 +17,24 @@ epochs = 30
 #####
 ####
 dataset_path='./data/training_set_rel3.tsv'
+# x = [0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
 
+def plot_qwk_scores_all_sets(sets):
+  fig = plt.figure()
+  ax = plt.subplot(111)
+  x = [1,2,3,4,5]
+  set1,set2,set3,set4,set5,set6,set7,set8 = sets
+  ax.plot(x, set1 , label='set1')
+  ax.plot(x, set2, label='set2')
+  ax.plot(x, set3, label='set3')
+  ax.plot(x, set4, label='set4')
+  ax.plot(x, set5, label='set5')
+  ax.plot(x, set6, label='set6')
+  ax.plot(x, set7, label='set7')
+  ax.plot(x, set8, label='set8')
+  plt.title('Set wise QWK using BERT for individual sets')
+  ax.legend()
+  plt.show()
 
 def tsne_plot(model):
 	"Creates and TSNE model and plots it"
@@ -41,13 +58,27 @@ def tsne_plot(model):
 	for i in range(len(x)):
 		plt.scatter(x[i], y[i])
 		plt.annotate(labels[i],
-		             xy=(x[i], y[i]),
-		             xytext=(5, 2),
-		             textcoords='offset points',
-		             ha='right',
-		             va='bottom')
+					 xy=(x[i], y[i]),
+					 xytext=(5, 2),
+					 textcoords='offset points',
+					 ha='right',
+					 va='bottom')
 	plt.savefig('Graph.png')
 	plt.show()
+
+def plot_accuracy_curve(history):
+	plt.plot(history.history['loss'])
+	plt.plot(history.history['mae'])
+	plt.title('Model loss')
+	plt.ylabel('Loss')
+	plt.xlabel('Epoch')
+	plt.legend(['Train', 'Test'], loc='upper left')
+	plt.show()
+
+
+def plot_acrchitecture(filename, model):
+	from keras.utils import plot_model
+	plot_model(model, to_file=str(filename) + '.png')
 
 
 def build_visualization():

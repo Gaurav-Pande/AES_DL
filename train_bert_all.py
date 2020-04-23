@@ -6,8 +6,9 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import KFold
 from sklearn.metrics import cohen_kappa_score
-from AES_DL.baseline_keras import get_model
-from AES_DL.preprocess import prepare_data
+from baseline_keras import get_model
+from preprocess import prepare_data
+from visualize import plot_accuracy_curve
 # use_cuda = True
 # if use_cuda and torch.cuda.is_available():
 #   torch.cuda()
@@ -22,9 +23,11 @@ dropout=0.5
 recurrent_dropout=0.4
 input_size=768
 activation='relu'
-bidirectional = False
+optimizer = 'adam'
+loss_function = 'mean_square_error'
 batch_size= 64
 epoch =70
+model_name = "BiLSTM"
 #####
 ####
 dataset_path='./data/training_set_rel3.tsv'
@@ -32,7 +35,7 @@ dataset_path='./data/training_set_rel3.tsv'
 def train_bert():
 	warnings.filterwarnings('ignore')
 	cv = KFold(n_splits=5, shuffle=True)
-	X,y = prepare_data(dataset_path=dataset_path)
+	X,y,_ = prepare_data(dataset_path=dataset_path)
 	cv_data = cv.split(X)
 	results = []
 	prediction_list = []
@@ -109,11 +112,14 @@ def train_bert():
 			# print(trainDataVectors)
 			# print(testDataVectors)
 
-			lstm_model = get_model(Hidden_dim1=Hidden_dim1, Hidden_dim2=Hidden_dim2, return_sequences = return_sequences, dropout=dropout, recurrent_dropout=recurrent_dropout, input_size=input_size, activation=activation, bidirectional = bidirectional)
-			lstm_model.fit(trainDataVectors, y_train, batch_size=batch_size, epochs=epoch)
+			lstm_model = get_model(Hidden_dim1=Hidden_dim1, Hidden_dim2=Hidden_dim2, return_sequences = return_sequences,
+			                       dropout=dropout, recurrent_dropout=recurrent_dropout, input_size=input_size, activation=activation,
+			                       loss_function=loss_function, optimizer=optimizer, model_name=model_name)
+			history = lstm_model.fit(trainDataVectors, y_train, batch_size=batch_size, epochs=epoch)
+			plot_accuracy_curve(history)
 			y_pred = lstm_model.predict(testDataVectors)
 			y_pred = np.around(y_pred)
-			# y_pred.dropna()
+			# y_pred.dropna()s
 			np.nan_to_num(y_pred)
 
 			# evaluate the model

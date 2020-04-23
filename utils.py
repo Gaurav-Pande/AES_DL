@@ -3,6 +3,10 @@ import numpy as np
 import nltk
 from nltk.corpus import stopwords
 import re
+import preprocess
+import multiprocessing
+from gensim.models import Word2Vec
+import time
 
 top10 = collections.defaultdict(int)
 
@@ -12,7 +16,9 @@ def top10_words(essay_v, remove_stopwords):
     words = essay_v.lower().split()
     top10 = collections.defaultdict(int)
     if remove_stopwords:
-        stops = set(stopwords.words("english"))
+        stops = stopwords.words("english")
+        ner = preprocess.stop_words()
+        stops.extend(ner)
         for word in words:
           if word not in stops:
             # words.append(w)
@@ -63,3 +69,21 @@ def getAvgFeatureVecs(essays, model, num_features):
         essayFeatureVecs[counter] = makeFeatureVec(essay, model, num_features)
         counter = counter + 1
     return essayFeatureVecs
+
+def build_word2vec(train_sentences, num_workers, num_features, min_word_count, context,
+                     downsampling):
+    model = Word2Vec(workers=num_workers, size=num_features, min_count=min_word_count, window=context,
+                     sample=downsampling)
+    # saving the word2vec model
+    # model.wv.save_word2vec_format('word2vec_'+ str(fold_count) +'.bin', binary=True)
+    cores = multiprocessing.cpu_count()
+    print("\n {} cores using".format(cores))
+    start_time = time.time()
+    model.build_vocab(train_sentences, progress_per=10000)
+    print('Time to build vocab using word2vec: {} sec'.format(time.time() - start_time))
+    start_time = time.time()
+    model.train(train_sentences, total_examples=model.corpus_count, epochs=epochs, report_delay=1)
+    print('Time to train the word2vec model: {} mins'.format(time.time() - start_time))
+    model.init_sims(replace=True)
+    sorted_dic = sorted(top10.items(), key=lambda k: k[1], reverse=True)
+    return model,sorted_dic
